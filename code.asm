@@ -100,7 +100,7 @@ main:
 		out add2,al
 
 		;ICW4
-		mov al,00000001b
+		mov al,10000001b
 		out add2,al
 
 		;OCW1 - enable all interrupts
