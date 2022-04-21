@@ -135,6 +135,12 @@ buzzerOn  PROC NEAR
     ret
 buzzerOn	ENDP
 
+display PROC NEAR
+    mov Al,00001001b
+    out	porta1,AL
+    ret
+display ENDP
+
 ;ISR for NMI from EOC of ADC0808
 EOC_ADC_isr:
 
