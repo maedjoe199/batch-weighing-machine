@@ -59,14 +59,14 @@
 		creg1 equ 06h		;control register
 
 		;8255B
-		porta2 equ 08h		;stepper motor horizontal
-		portb2 equ 0Ah		;stepper motor vertical
-		portc2 equ 0Ch		;Output GATE1 and output LED for scan complete
-		creg2 equ 0Eh		;control register
+		porta2 equ 20h		;stepper motor horizontal
+		portb2 equ 22h		;stepper motor vertical
+		portc2 equ 24h		;Output GATE1 and output LED for scan complete
+		creg2 equ 26h		;control register
 
 		;8259
-		add1 equ 18h
-		add2 equ 1Ah
+		add1 equ 40h
+		add2 equ 42h
 
 ;main program
 
