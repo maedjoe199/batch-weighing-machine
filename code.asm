@@ -238,6 +238,17 @@ getAvg:
   	ror ax,cl
   	mov digit4,al
 
+
+
+    CMP avg, 99
+    JL DISPLAY
+    MOV digit1, 0
+    MOV digit2, 0
+    MOV digit3, 0
+    MOV digit4, 0
+    CALL buzzerOn
+DISPLAY:
+
   	;DISPLAY DIGITS
 
   	mov dl,'0'
@@ -259,10 +270,4 @@ getAvg:
   	add dl,digit4
   	mov ah,02h
   	int 21h
-
-
-    CMP avg, 99
-    JL x1
-    CALL buzzerOn
-x1:
 iret
