@@ -239,8 +239,24 @@ getAvg:
   	mov digit4,al
 
   	;DISPLAY DIGITS
+
   	mov dl,'0'
   	add dl,digit1
+  	mov ah,02h
+  	int 21h
+
+  	mov dl,'0'
+  	add dl,digit2
+  	mov ah,02h
+  	int 21h
+
+  	mov dl,'0'
+  	add dl,digit3
+  	mov ah,02h
+  	int 21h
+
+  	mov dl,'0'
+  	add dl,digit4
   	mov ah,02h
   	int 21h
 
