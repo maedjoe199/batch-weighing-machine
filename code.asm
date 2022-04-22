@@ -20,7 +20,6 @@
 #DI=0000h#
 #BP=0000h#
 
-; add your code here
 ;jump to the start of the code - reset address is kept at 0000:0000
 ;as this is only a limited simulation
         jmp     main
@@ -90,9 +89,10 @@ main:
 		mov al,10000000b
 		out creg2,al
 
-		;initialize 8259
+    ;initialize 8259 for 40h
+
 		;ICW1
-		mov al, 00010011b
+		mov al, 00010011b ; 3 msbs represent the address lines, they are dont cares for 8086 processor
 		out add1,al
 
 		;ICW2 - starting vector number is 40h
@@ -100,12 +100,13 @@ main:
 		out add2,al
 
 		;ICW4
-		mov al,00000001b
+		mov al,00001011b ;
 		out add2,al
 
 		;OCW1 - enable all interrupts
 		mov al,00000000b
 		out add2,al
+		; Figure out the int vector address;
 
 		sti
 
@@ -118,7 +119,8 @@ idle:
 ;subroutine to read 8-bit digitized voltage value of a weight from ADC
 readweight PROC NEAR
     ; set up of the combination to select the inp0, inp1 or inp2
-    ; Barath fill this please
+
+
 
     MOV di, 0
 
@@ -165,7 +167,84 @@ doRead:
     JNE doRead
 
 getAvg:
-; Joshi add code to find average of weights
+
+  	mov inp1,30h
+  	mov inp2,33h
+  	mov inp3,34h
+
+  	;SUM UP THE INPUTS
+    MOV si, weights
+  	mov bx,00h
+  	mov al,[SI]
+    INC SI
+  	cbw
+  	add bx,ax
+
+  	mov al,[SI]
+    INC SI
+  	cbw
+  	add bx,ax
+
+  	mov al,[SI]
+    INC SI
+  	cbw
+  	add bx,ax
+
+  	mov ax,bx
+
+  	;MULTIPLY SUM BY 100d ie 64h
+  	mov bl,64h
+  	mul bl
+  	mov dx,0000h
+
+  	;DIVIDE BY 3 TO TAKE AVG - AX CONTAINS THE AVG IN HEXA FORM AT END
+  	mov bx,0003h
+  	div bx
+
+  	;CONVERT TO BCD
+  	mov cl, 64h
+  	div cl
+  	mov bh,al
+  	mov al, ah
+  	mov ah,00h
+  	mov cl,0ah
+  	div cl
+  	mov cl,04h
+  	rol al,cl
+  	add al,ah
+  	mov bl,al
+  	mov bcd,bx
+
+  	;SEPERATE THE DIGITS
+  	mov ax,bcd
+  	and ax,000fh
+  	mov digit1,al
+
+  	mov ax,bcd
+  	and ax,00f0h
+  	mov cl,04h
+  	ror ax,cl
+  	mov digit2,al
+
+  	mov ax,bcd
+  	and ax,0f00h
+  	mov cl,08h
+  	ror ax,cl
+  	mov digit3,al
+
+  	mov ax,bcd
+  	and ax,0f000h
+  	mov cl,0ch
+  	ror ax,cl
+  	mov digit4,al
+
+  	;DISPLAY DIGITS
+  	mov dl,'0'
+  	add dl,digit1
+  	mov ah,02h
+  	int 21h
+
+
     CMP avg, 99
     JL x1
     CALL buzzerOn
